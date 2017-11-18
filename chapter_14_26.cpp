@@ -5,6 +5,12 @@
 
 class StrVec
 {
+	friend bool operator==(const StrVec&, const StrVec&);
+	friend bool operator!=(const StrVec&, const StrVec&);
+	friend bool operator<(const StrVec&, const StrVec&);
+	friend bool operator<=(const StrVec&, const StrVec&);
+	friend bool operator>(const StrVec&, const StrVec&);
+	friend bool operator>=(const StrVec&, const StrVec&);
 public:
 	StrVec() :elements(nullptr), first_free(nullptr), cap(nullptr) {}
 	StrVec(std::initializer_list<std::string>lst)
@@ -17,12 +23,16 @@ public:
 	StrVec(StrVec &&s)noexcept;
 	StrVec &operator=(const StrVec&);
 	StrVec &operator=(StrVec &&rhs) noexcept;
+	StrVec &operator=(std::initializer_list<std::string> il);
 	~StrVec();
 	void push_back(const std::string&);
 	size_t size()const { return first_free - elements; }
 	size_t capacity()const { return cap - elements; }
 	std::string *begin()const { return elements; }
 	std::string *end()const { return first_free; }
+
+	std::string& operator[](size_t n) { return elements[n]; }
+	const std::string& operator[](size_t n)const { return elements[n]; }
 private:
 	static std::allocator<std::string> alloc;
 	void chk_n_alloc()
@@ -159,4 +169,44 @@ void StrVec::resize(size_t count, const std::string& s)
 	else if (count < size())
 		while (first_free != elements + count)
 			alloc.destroy(--first_free);
+}
+
+bool operator==(const StrVec&lhs, const StrVec& rhs)
+{
+	return (lhs.size() == rhs.size() &&
+		std::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+bool operator!=(const StrVec&lhs, const StrVec&rhs)
+{
+	return !(lhs == rhs);
+}
+
+bool operator<(const StrVec&lhs, const StrVec&rhs)
+{
+	std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+bool operator>(const StrVec&lhs, const StrVec&rhs)
+{
+	return rhs < lhs;
+}
+
+bool operator<=(const StrVec&lhs, const StrVec&rhs)
+{
+	return !(lhs > rhs);
+}
+
+bool operator>=(const StrVec&lhs, const StrVec&rhs)
+{
+	return !(lhs < rhs);
+}
+
+StrVec &StrVec::operator=(std::initializer_list<std::string> il)
+{
+	auto data = alloc_n_copy(il.begin(), il.end());
+	free();
+	elements = data.first;
+	first_free = cap = data.second;
+	return *this;
 }

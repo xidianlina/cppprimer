@@ -5,6 +5,12 @@
 
 class StrVec
 {
+	friend bool operator==(const StrVec&, const StrVec&);
+	friend bool operator!=(const StrVec&, const StrVec&);
+	friend bool operator<(const StrVec&, const StrVec&);
+	friend bool operator<=(const StrVec&, const StrVec&);
+	friend bool operator>(const StrVec&, const StrVec&);
+	friend bool operator>=(const StrVec&, const StrVec&);
 public:
 	StrVec() :elements(nullptr), first_free(nullptr), cap(nullptr) {}
 	StrVec(std::initializer_list<std::string>lst)
@@ -159,4 +165,35 @@ void StrVec::resize(size_t count, const std::string& s)
 	else if (count < size())
 		while (first_free != elements + count)
 			alloc.destroy(--first_free);
+}
+
+bool operator==(const StrVec&lhs, const StrVec& rhs)
+{
+	return (lhs.size() == rhs.size() &&
+		std::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+bool operator!=(const StrVec&lhs, const StrVec&rhs)
+{
+	return !(lhs == rhs);
+}
+
+bool operator<(const StrVec&lhs, const StrVec&rhs)
+{
+	std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+bool operator>(const StrVec&lhs, const StrVec&rhs)
+{
+	return rhs < lhs;
+}
+
+bool operator<=(const StrVec&lhs, const StrVec&rhs)
+{
+	return !(lhs > rhs);
+}
+
+bool operator>=(const StrVec&lhs, const StrVec&rhs)
+{
+	return !(lhs < rhs);
 }
