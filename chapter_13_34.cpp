@@ -67,8 +67,6 @@ void swap(Message& lhs, Message& rhs)
 	rhs.add_to_Folders(rhs);
 }
 
-// Message Implementation
-
 Message::Message(const Message& m) : contents(m.contents), folders(m.folders)
 {
 	add_to_Folders(m);
@@ -109,8 +107,6 @@ void Message::remove_from_Folders()
 {
 	for (auto f : folders) f->remMsg(this);
 }
-
-// Folder Implementation
 
 void swap(Folder& lhs, Folder& rhs)
 {

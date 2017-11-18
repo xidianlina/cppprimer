@@ -118,11 +118,13 @@ void StrVec::alloc_n_move(size_t new_cap)
 	cap = elements + new_cap;
 }
 
-//void StrVec::reallocate()
-//{
-//	auto newcapacity = size() ? 2 * size() : 1;
-//	alloc_n_move(newcapacity);
-//}
+/*
+void StrVec::reallocate()
+{
+	auto newcapacity = size() ? 2 * size() : 1;
+	alloc_n_move(newcapacity);
+}
+*/
 
 void StrVec::reallocate()
 {
